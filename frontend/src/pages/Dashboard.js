@@ -3,7 +3,7 @@ import { getEmployees, deleteEmployee } from '../services/api';
 import EmployeeForm from '../components/EmployeeForm';
 import EmployeeViewModal from '../components/EmployeeViewModal';
 import Login from '../components/Login';
-import { exportToCSV } from '../utils/exportCsv';
+import exportToCSV from '../utils/exportCsv'; // Fixed: Default import instead of named import
 import { 
   Users, UserCheck, Plus, Search, Eye,
   Edit3, Trash2, LayoutDashboard, Building, Briefcase, LogOut, ChevronDown, Download, DollarSign 

@@ -22,3 +22,5 @@ export const exportToCSV = (data, filename = 'employee_data.csv') => {
   link.click();
   document.body.removeChild(link);
 };
+
+export default exportToCSV;
