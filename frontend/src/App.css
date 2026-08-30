@@ -513,3 +513,51 @@ button * {
     min-width: 650px;
   }
 }
+/* Premium Mobile Card View UX Override */
+@media (max-width: 768px) {
+  .glass-table-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  .glass-table, 
+  .glass-table thead, 
+  .glass-table tbody, 
+  .glass-table th, 
+  .glass-table td, 
+  .glass-table tr { 
+    display: block !important; 
+  }
+  
+  .glass-table thead { 
+    display: none !important;
+  }
+  
+  .glass-table tbody tr {
+    background: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 16px !important;
+    margin-bottom: 16px !important;
+    padding: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+  }
+  
+  .glass-table td { 
+    border: none !important;
+    border-bottom: 1px solid #f1f5f9 !important; 
+    padding: 10px 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-size: 0.88rem !important;
+    width: 100% !important;
+  }
+
+  .glass-table td:last-child {
+    border-bottom: none !important;
+    justify-content: flex-end !important;
+    padding-top: 14px !important;
+  }
+}
