@@ -3,7 +3,7 @@ import { getEmployees, deleteEmployee } from '../services/api';
 import EmployeeForm from '../components/EmployeeForm';
 import EmployeeViewModal from '../components/EmployeeViewModal';
 import Login from '../components/Login';
-import exportToCSV from '../utils/exportCsv'; // Fixed: Default import instead of named import
+import exportToCSV from '../utils/exportCsv';
 import { 
   Users, UserCheck, Plus, Search, Eye,
   Edit3, Trash2, LayoutDashboard, Building, Briefcase, LogOut, ChevronDown, Download, DollarSign 
@@ -26,9 +26,17 @@ export default function Dashboard() {
   const fetchAll = async () => {
     try {
       const res = await getEmployees({ search, department, status });
-      setEmployees(res.data);
+      // Fix: Check if response has paginated .data property or direct array
+      if (res.data && Array.isArray(res.data.data)) {
+        setEmployees(res.data.data);
+      } else if (Array.isArray(res.data)) {
+        setEmployees(res.data);
+      } else {
+        setEmployees([]);
+      }
     } catch (err) {
       console.error(err);
+      setEmployees([]);
     }
   };
 
@@ -57,8 +65,10 @@ export default function Dashboard() {
 
   if (!user) return <Login onLogin={handleLogin} />;
 
-  const activeCount = employees.filter(e => e.status === 'Active').length;
-  const totalPayroll = employees.reduce((acc, curr) => acc + Number(curr.salary || 0), 0);
+  // Defensive array checks to prevent crash if backend returns unexpected payload
+  const safeEmployees = Array.isArray(employees) ? employees : [];
+  const activeCount = safeEmployees.filter(e => e.status === 'Active').length;
+  const totalPayroll = safeEmployees.reduce((acc, curr) => acc + Number(curr.salary || 0), 0);
 
   return (
     <div className="app-layout">
@@ -118,7 +128,7 @@ export default function Dashboard() {
                 <div key={dept} style={{ padding: '20px', border: '1px solid var(--border)', borderRadius: '12px', background: '#f8fafc' }}>
                   <h3 style={{ margin: '0 0 8px 0', color: '#4f46e5' }}>{dept}</h3>
                   <p style={{ margin: 0, color: 'var(--text-muted)' }}>
-                    Total Staff: <strong>{employees.filter(e => e.department === dept).length}</strong>
+                    Total Staff: <strong>{safeEmployees.filter(e => e.department === dept).length}</strong>
                   </p>
                 </div>
               ))}
@@ -131,7 +141,7 @@ export default function Dashboard() {
                 <div className="stat-box">
                   <div>
                     <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>TOTAL EMPLOYEES</span>
-                    <div className="stat-num">{employees.length}</div>
+                    <div className="stat-num">{safeEmployees.length}</div>
                   </div>
                   <div className="stat-icon icon-blue"><Users size={24} /></div>
                 </div>
@@ -180,7 +190,7 @@ export default function Dashboard() {
                   <option value="Inactive">Inactive</option>
                 </select>
 
-                <button className="btn-cancel" onClick={() => exportToCSV(employees)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button className="btn-cancel" onClick={() => exportToCSV(safeEmployees)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Download size={16} /> Export CSV
                 </button>
 
@@ -205,12 +215,12 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {employees.length === 0 ? (
+                  {safeEmployees.length === 0 ? (
                     <tr>
                       <td colSpan="8" style={{ textAlign: 'center', padding: '30px' }}>No employee records found.</td>
                     </tr>
                   ) : (
-                    employees.map((emp) => (
+                    safeEmployees.map((emp) => (
                       <tr key={emp._id}>
                         <td><strong>{emp.name}</strong></td>
                         <td style={{ color: 'var(--text-muted)' }}>{emp.email}</td>
