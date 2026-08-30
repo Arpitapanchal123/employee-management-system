@@ -11,4 +11,9 @@ const employeeSchema = new mongoose.Schema({
   status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' }
 }, { timestamps: true });
 
+// Performance Optimization: Indexes for Fast Search & Sorting
+employeeSchema.index({ createdAt: -1 });
+employeeSchema.index({ name: 1, email: 1 });
+employeeSchema.index({ department: 1, status: 1 });
+
 module.exports = mongoose.model('Employee', employeeSchema);

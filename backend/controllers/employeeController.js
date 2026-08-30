@@ -3,7 +3,11 @@ const Employee = require('../models/Employee');
 // GET all employees (With Search & Filter)
 exports.getEmployees = async (req, res) => {
   try {
-    const { search, department, role, status } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const { search, department, status } = req.query;
     let query = {};
 
     if (search) {
@@ -13,13 +17,22 @@ exports.getEmployees = async (req, res) => {
       ];
     }
     if (department) query.department = department;
-    if (role) query.role = role;
     if (status) query.status = status;
 
-    const employees = await Employee.find(query);
-    res.status(200).json(employees);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const total = await Employee.countDocuments(query);
+    const employees = await Employee.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      data: employees,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
