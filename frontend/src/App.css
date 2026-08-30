@@ -446,7 +446,7 @@ button * {
   }
 }
 
-/* Mobile Devices Optimization (<= 768px) */
+/* Mobile Devices Optimization (<= 768px Card View Layout) */
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column !important;
@@ -502,19 +502,7 @@ button * {
     grid-template-columns: 1fr !important;
   }
 
-  /* Horizontal Scrollable Table for Small Displays */
-  .glass-table-wrapper {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-  }
-
-  .glass-table {
-    min-width: 650px;
-  }
-}
-/* Premium Mobile Card View UX Override */
-@media (max-width: 768px) {
+  /* Responsive Mobile Cards Layout */
   .glass-table-wrapper {
     background: transparent !important;
     border: none !important;
@@ -553,11 +541,22 @@ button * {
     align-items: center !important;
     font-size: 0.88rem !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 
+  /* Actions Row Display Fix for Mobile Cards */
   .glass-table td:last-child {
     border-bottom: none !important;
     justify-content: flex-end !important;
     padding-top: 14px !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .glass-table td:last-child .action-icon-btn {
+    margin-right: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
