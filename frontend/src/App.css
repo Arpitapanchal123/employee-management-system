@@ -11,16 +11,24 @@
   --border: #e2e8f0;
 }
 
-body {
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .app-layout {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
 /* Sidebar */
@@ -31,6 +39,7 @@ body {
   padding: 24px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .brand-logo {
@@ -66,6 +75,7 @@ body {
   flex: 1;
   padding: 32px 40px;
   overflow-y: auto;
+  min-width: 0;
 }
 
 .top-bar {
@@ -79,6 +89,7 @@ body {
   font-size: 1.75rem;
   font-weight: 700;
   color: #0f172a;
+  margin: 0;
 }
 
 .user-profile {
@@ -106,7 +117,7 @@ body {
 /* Colorful Stat Cards */
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
   margin-bottom: 32px;
 }
@@ -152,6 +163,7 @@ body {
   margin-bottom: 24px;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .search-box {
@@ -163,6 +175,7 @@ body {
   border-radius: 8px;
   border: 1px solid var(--border);
   flex: 1;
+  min-width: 200px;
 }
 
 .search-box input {
@@ -243,11 +256,12 @@ body {
   border-radius: 8px;
   cursor: pointer;
   margin-right: 8px;
+  position: relative;
+  z-index: 2;
 }
 .action-icon-btn.edit:hover { background: #e0e7ff; color: #4338ca; }
 .action-icon-btn.delete:hover { background: #fee2e2; color: #b91c1c; }
 
-/* Fix button and icon pointer issues */
 button {
   cursor: pointer !important;
   pointer-events: auto !important;
@@ -257,12 +271,7 @@ button * {
   pointer-events: none !important;
 }
 
-.action-icon-btn {
-  position: relative;
-  z-index: 2;
-}
-
-/* Fixed Modal Overlay Styles */
+/* Modal Overlay Styles */
 .modal-overlay {
   position: fixed !important;
   top: 0 !important;
@@ -321,12 +330,6 @@ button * {
   background: #fff !important;
 }
 
-.modal-form input:focus, 
-.modal-form select:focus {
-  border-color: #6366f1 !important;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
-}
-
 .modal-actions {
   display: flex !important;
   gap: 12px !important;
@@ -344,10 +347,6 @@ button * {
   flex: 1 !important;
 }
 
-.btn-cancel:hover {
-  background: #e2e8f0 !important;
-}
-
 /* Login Screen UI */
 .login-container {
   height: 100vh;
@@ -356,6 +355,7 @@ button * {
   justify-content: center;
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
   color: white;
+  padding: 16px;
 }
 
 .login-card {
@@ -367,12 +367,6 @@ button * {
   width: 100%;
   max-width: 400px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-.login-card h2 {
-  margin: 0 0 8px 0;
-  font-size: 1.75rem;
-  font-weight: 700;
 }
 
 .login-card input {
@@ -388,10 +382,6 @@ button * {
   font-size: 0.95rem;
 }
 
-.login-card input::placeholder {
-  color: #94a3b8;
-}
-
 .login-card button {
   width: 100%;
   padding: 12px;
@@ -403,11 +393,6 @@ button * {
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.login-card button:hover {
-  background: var(--primary-hover);
 }
 
 /* Profile Menu Dropdown */
@@ -444,9 +429,24 @@ button * {
   justify-content: center;
   gap: 8px;
 }
-.logout-btn:hover { background: #fca5a5; }
 
-/* Mobile Responsive Media Queries */
+/* ------------------------------------------------------------- */
+/* ALL-DEVICE RESPONSIVE MEDIA QUERIES (Mobile, Tablet, Laptop) */
+/* ------------------------------------------------------------- */
+
+/* Tablet Optimization (769px to 1024px) */
+@media (max-width: 1024px) {
+  .main-wrapper {
+    padding: 24px;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Mobile Devices Optimization (<= 768px) */
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column !important;
@@ -455,27 +455,61 @@ button * {
   .sidebar {
     width: 100% !important;
     height: auto !important;
-    padding: 12px 16px !important;
+    padding: 16px !important;
     position: relative !important;
   }
 
+  .brand-logo {
+    margin-bottom: 16px;
+  }
+
   .main-wrapper {
-    margin-left: 0 !important;
     padding: 16px !important;
     width: 100% !important;
     overflow-x: hidden;
   }
 
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
   .toolbar {
     flex-direction: column !important;
     align-items: stretch !important;
+    gap: 12px;
   }
 
   .toolbar > div {
-    flex-wrap: wrap;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
   }
 
+  .filter-select, .btn-cancel, .btn-add {
+    width: 100% !important;
+    justify-content: center;
+  }
+
+  .modal-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Horizontal Scrollable Table for Small Displays */
   .glass-table-wrapper {
     overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  .glass-table {
+    min-width: 650px;
   }
 }
